@@ -1,0 +1,45 @@
+@startuml class
+class User {
+    + user_id: String
+    + name: String
+    + password: String
+    + register()
+    + login(user_id: String, password: String): Boolean
+}
+
+class Expense {
+    + expense_id: String
+    + date: Date
+    + merchant_name: String
+    + category: String
+    + amount: Float
+    + payment_method: String
+    + occurrence_pattern: String
+    + receipt_image: File
+    + createExpense()
+    + deleteExpense(expense_id: String)
+}
+
+class ExpenseManager {
+    + searchExpenses(criteria: Map<String, Object>): List<Expense>
+    + listExpenses(expenses: List<Expense>): Table
+    + generateStatement(): String
+    + visualizeExpenses(): Chart
+}
+
+class Database {
+    + addUser(user: User)
+    + verifyUser(user_id: String, password: String): Boolean
+    + addExpense(expense: Expense)
+    + deleteExpense(expense_id: String)
+    + searchExpenses(criteria: Map<String, Object>): List<Expense>
+    + getMerchantOccurrence(merchant_name: String): String
+}
+
+User "1" --> "0..*" Expense
+User "1" --> "1" ExpenseManager
+ExpenseManager "1" --> "1" Database
+Expense "0..*" --> "1" Database
+Database "1" --> "0..*" Expense
+
+@enduml

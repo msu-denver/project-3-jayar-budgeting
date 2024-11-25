@@ -1,0 +1,35 @@
+@startuml sequence_diagram
+actor User
+participant "ExpenseManager" as EM
+participant "Database" as DB
+participant "Expense" as Exp
+
+== User Registration ==
+User -> EM: register(user_id, name, password)
+EM -> DB: addUser(user)
+DB --> EM: Success/Failure
+EM --> User: Registration Confirmation
+
+== User Login ==
+User -> EM: login(user_id, password)
+EM -> DB: verifyUser(user_id, password)
+DB --> EM: Boolean (Success/Failure)
+EM --> User: Login Confirmation/Failure
+
+== Create Expense ==
+User -> EM: createExpense(date, merchant, category, amount, payment, receipt)
+EM -> DB: getMerchantOccurrence(merchant)
+DB --> EM: occurrence_pattern (one-time/recurring)
+EM -> Exp: Create expense object
+Exp -> DB: addExpense(expense)
+DB --> Exp: Success/Failure
+Exp --> EM: Confirmation
+EM --> User: Expense Created Confirmation
+
+== Search Expenses ==
+User -> EM: searchExpenses(criteria)
+EM -> DB: searchExpenses(criteria)
+DB --> EM: List<Expense>
+EM -> User: Display Expense List
+
+@enduml

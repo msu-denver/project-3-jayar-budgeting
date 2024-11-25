@@ -1,0 +1,28 @@
+@startuml use_case
+actor User
+
+rectangle "Expense Tracker System" {
+    usecase "Register (US#1)" as UC1
+    usecase "Login (US#2)" as UC2
+    usecase "Create Expense (US#3)" as UC3
+    usecase "Delete Expense (US#4)" as UC4
+    usecase "Search Expenses (US#5)" as UC5
+    usecase "List Expenses (US#6)" as UC6
+    usecase "View Statement (US#7)" as UC7
+    usecase "Visualize Expenses (US#8)" as UC8
+}
+
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+User --> UC7
+User --> UC8
+
+UC3 <--> UC5 : Reuses Search Functionality
+UC5 --> UC6 : Navigates to List Expenses
+UC7 --> UC6 : Navigates to List Expenses
+
+@enduml
