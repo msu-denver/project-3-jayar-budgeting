@@ -1,35 +1,45 @@
 {% extends 'base.html' %}
+{% block title %}Login - Expense Budgeting{% endblock %}
+
 {% block main %}
-    <div class="container mt-5">
-        <h1 class="mb-4">Login to Expense Tracker</h1>
-        <div class="card p-4 shadow-sm">
-            <form action="" method="POST" novalidate>
-                {{ form.hidden_tag() }}
-                <div class="mb-3">
-                    {{ form.id.label(class="form-label") }}
-                    {{ form.id(size=15, class="form-control", placeholder="Enter your user ID") }}
-                    {% if form.id.errors %}
-                        {% for error in form.id.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                
-                <div class="mb-3">
-                    {{ form.passwd.label(class="form-label") }}
-                    {{ form.passwd(size=30, class="form-control", placeholder="Enter your password") }}
-                    {% if form.passwd.errors %}
-                        {% for error in form.passwd.errors %}
-                            <div class="text-danger">{{ error }}</div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                
-                <button type="submit" class="btn btn-primary w-100">Login</button>
-            </form>
-            <div class="mt-3 text-center">
-                <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+    <div class="form-container">
+        <h1>Login</h1>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form action="{{ url_for('login') }}" method="POST" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.id.label }}
+                {{ form.id(class="form-input") }}
+                {% if form.id.errors %}
+                    {% for error in form.id.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
             </div>
+            
+            <div class="form-group">
+                {{ form.passwd.label }}
+                {{ form.passwd(class="form-input") }}
+                {% if form.passwd.errors %}
+                    {% for error in form.passwd.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                {{ form.submit(class="submit-button") }}
+            </div>
+        </form>
+        <div class="signup-link">
+            <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
         </div>
     </div>
 {% endblock %}
