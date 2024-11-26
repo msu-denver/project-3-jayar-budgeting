@@ -9,3 +9,10 @@ from flask_wtf import FlaskForm
 from wtforms import *
 from wtforms import StringField, TextAreaField, PasswordField, SubmitField, DateField, SelectField
 from wtforms.validators import DataRequired, Length, EqualTo, Optional, NumberRange
+
+class SignUpForm(FlaskForm):
+    id = StringField('User ID', validators=[DataRequired(), Length(min=4, max=20)])
+    name = StringField('Name', validators=[DataRequired(), Length(max=50)])
+    passwd = PasswordField('Password', validators=[DataRequired(),Length(min=6, message='Password must be at least 6 characters')])
+    passwd_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('passwd', message='Passwords must match')])
+    submit = SubmitField('Confirm')

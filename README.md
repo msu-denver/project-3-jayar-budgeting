@@ -14,14 +14,14 @@ This budgeting web application allows individuals to take control of their finan
 
 ### US#1: User Registration (sign up)
 
-As a user, I want to register on the platform to begin tracking my expenses. When I provide all the required information (user ID, name, and password) and click 'submit', my account should be created. 
+As a user, I want to register on the platform to begin tracking my expenses. When I provide all the required information (user ID, name, and password) and click 'Sign Up', the system should verify my credentials. If they are valid, my account should be created. 
 
 ```
 User story points: 5
 ```
 
 ### US#2: User Authentication (log in)
-As a registered user, I want to log in to the platform. When I enter my user ID and password, the system should verify my credentials. If they match the records in the database, I should be granted access to navigate the app.
+As a registered user, I want to log in to the platform. When I enter my user ID and password and click 'Log In', the system should verify my credentials. If they match the records in the database, I should be granted access to navigate the app.
 
 ```
 User story points: 5
@@ -35,14 +35,14 @@ User story points: 15
 ```
 
 ### US#4: Delete Expense
-As a registered user, I want to delete my expenses. When I provide the expense's ID and confirm, the expense should be removed from the database.
+As a registered user, I want to delete my expenses. When I provide the expense's ID and and click 'Confirm', the expense should be removed from the database.
 
 ```
 User story points: 10
 ```
 
 ### US#5: Search Expenses
-As a registered user, I want to search through my expenses by date, category, payment method, and if its a reoccuring or one-time charge. When I enter my search parameters and click 'confirm,' I should be redirected to a section of the application (US#6) that displays the expenses.
+As a registered user, I want to search through my expenses by date, category, payment method, and if its a reoccuring or one-time charge. When I enter my search parameters and click 'Search' I should be redirected to a section of the application (US#6) that displays the expenses.
 
 ```
 User story points: 25
@@ -63,7 +63,7 @@ User story points: 25
 ```
 
 ### US#8: Expenses Visualization 
-As a registered user, I want to generate a bar graph or heat map that summarizes the number of expenses by catergory so that I can easily visualize trends and patterns over time.
+As a registered user, I want to generate a bar graph or heat map that summarizes the number of expenses by catergory so that I can easily visualize trends and patterns in my expenses over time.
 
 ```
 User story points: 10

@@ -1,15 +1,23 @@
-body {
+  body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 0.9rem;
+    margin: 0;
   }
   
   h1 {
     color: navy;
-    margin-left: 20px;
     text-align: center;
-    margin-bottom: 1rem;
   }
   
+  h2 {
+    font-size: 1rem;
+  }
+
+  hr {
+    border: 1px solid #ddd;
+    margin: 1rem;
+  }
+
   table, th, td {
     border: 1px solid;
     padding: 5px
@@ -86,7 +94,12 @@ body {
     background-color: #000066;
   }
   
-  .error {
+  .btn-default {
+    background-color: #f0f0f0;
+    color: black;
+  }
+
+  .form-error {
     color: red;
     font-size: 0.875rem;
     margin-top: 0.25rem;
@@ -97,4 +110,41 @@ body {
     display: flex;
     gap: 1rem;
     margin: 1rem 0;
+  }
+
+  .center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    list-style: none;
+    gap: 10px;
+  }
+
+  .divider-control {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    font-weight: bold;
+    background-color: #b80000;
+    color: white;
+  }
+
+  .successful {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    font-weight: bold;
+    background-color: #029200;
+    color: white;
   }

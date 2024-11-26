@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block main %}
+<div style="display: flex; justify-content: center; align-items: center">
+  <div class="divider-control">
+    <h1 style="margin: 0">Welcome</h1>
+    <p>Begin your journey to smarter spending and better budgeting</p>
+    <hr />
+    <div class="button-group center-content">
+      <a
+        href="{{ url_for('signup') }}"
+        style="width: 60px; text-align: center"
+        class="btn btn-primary"
+      >
+        Sign Up
+      </a>
+      <a
+        href="{{ url_for('signup') }}"
+        style="width: 60px; text-align: center"
+        class="btn btn-primary"
+      >
+        Login
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %} {% block title %}Sign Up{% endblock %} {% block main%} 
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages %}
+<ul style="padding: 0; margin: 0">
+  {% for category, message in messages %}
+  <li class="{{ category }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% endwith %}
+
+<h1>Create a new account</h1>
+<form action="" method="POST" novalidate>
+  {{form.hidden_tag()}}
+  <p>
+    {{ form.id.label }}<br />{{ form.id(size=15, class="form-control",style="text-transform: lowercase;") }}
+  </p>
+  {% if form.id.errors %} {% for error in form.id.errors %}
+  <span class="form-error">{{ error }}</span>
+  {% endfor %} {% endif %}
+
+  <p>
+    {{ form.name.label }}<br />{{ form.name(size=30, class="form-control") }}
+  </p>
+  {% if form.name.errors %} {% for error in form.name.errors %}
+  <span class="form-error">{{ error }}</span>
+  {% endfor %} {% endif %}
+
+  <p>
+    {{ form.passwd.label }} <br />
+    {{ form.passwd(size=30, class="form-control") }}
+  </p>
+  {% if form.passwd.errors %} {% for error in form.passwd.errors %}
+  <span class="form-error">{{ error }}</span>
+  {% endfor %} {% endif %}
+
+  <p>
+    {{ form.passwd_confirm.label }}<br />{{ form.passwd_confirm(size=30,
+    class="form-control") }}
+  </p>
+  {% if form.passwd_confirm.errors %} {% for error in form.passwd_confirm.errors
+  %}
+  <span class="form-error">{{ error }}</span>
+  {% endfor %} {% endif %}
+
+  <p>
+    <button type="submit" class="btn btn-primary">Sign Up</button>
+    <a href="{{ url_for('index') }}" class="btn btn-default">Cancel</a>
+  </p>
+  <p>
+    Already have an account?
+    <a href="{{ url_for('index') }}">Sign in</a>
+  </p>
+</form>
+{% endblock %}
