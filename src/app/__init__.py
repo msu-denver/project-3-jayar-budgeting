@@ -5,37 +5,28 @@ Description: Budget Web App Initialization
 Authors: Yedani Mendoza Gurrola, Artem Marsh, Jose Gomez Betancourt, Alexander Gonzalez Ramirez, Rhodes Ferris
 '''
 
-from flask import Flask
 import os
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 
 app = Flask('Budgeting Web App')
-# app.secret_key = os.environ['SECRET_KEY']
 app.secret_key = 'you will never know'
 
-# db initialization
-from flask_sqlalchemy import SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///incidents.db'
+# database initialization
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI','postgresql://postgres:postgres1234@localhost:5432/budgeting')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 # models initialization
-# from app import models
+from app.models import User
 with app.app_context(): 
     db.create_all()
 
 # login manager
-from flask_login import LoginManager
 login_manager = LoginManager()
 login_manager.init_app(app)
-
-from app.models import User
-
-# cache setup
-from flask_caching import Cache
-cache = Cache()
-cache.init_app(app, config={
-    'CACHE_TYPE': 'simple',
-    'CACHE_DEFAULT_TIMEOUT': 300
-})
 
 # user_loader callback
 @login_manager.user_loader
@@ -44,6 +35,12 @@ def load_user(id):
         return db.session.query(User).filter(User.id==id).one()
     except: 
         return None
-
+    
 from app import routes
+from app.db_init import Initialize_Database, Initialize_Tables
+
+# database data initialization
+Initialize_Database()
+Initialize_Tables()
+
 print("Flask app instance created:", app)
