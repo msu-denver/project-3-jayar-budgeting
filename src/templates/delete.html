@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Delete Expenditure{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Delete Expenditure</h2>
+            <p class="text-muted">Please confirm the expenditure details before deletion.</p>
+            
+            <form method="POST" action="{{ url_for('delete_expenditure', id=form.expenditure_id.data) }}">
+                {{ form.csrf_token }}
+                <div class="mb-3">
+                    {{ form.expenditure_id.label(class="form-label") }}
+                    {{ form.expenditure_id(class="form-control") }}
+                    {% if form.expenditure_id.errors %}
+                        {% for error in form.expenditure_id.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Warning: This action cannot be undone. All expenditure data including attached receipts will be permanently deleted.
+                </div>
+                
+                <div class="d-grid gap-2">
+                    {{ form.submit(class="btn btn-danger") }}
+                    <a href="{{ url_for('list_expenditures') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+            
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-info mt-3">
+                        {% for message in messages %}
+                            <p class="mb-0">{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+{% endblock %}
