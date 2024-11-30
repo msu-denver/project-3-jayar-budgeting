@@ -1,5 +1,0 @@
-CREATE TABLE IF NOT EXISTS users (
-    id VARCHAR PRIMARY KEY,
-    name VARCHAR,
-    passwd BYTEA
-);
