@@ -5,14 +5,14 @@ Description: Database and Database Tables Initialization
 Authors: Yedani Mendoza Gurrola, Artem Marsh, Jose Gomez Betancourt, Alexander Gonzalez Ramirez, Rhodes Ferris
 '''
 
-import psycopg2
 import os
+import psycopg2
 from psycopg2 import sql
 
-DATABASE_USER = "postgres"
-DATABASE_USER_PWD = "postgres1234"
-DATABASE_HOST = "localhost"
-DATABASE_PORT = "5432"
+DATABASE_USER = 'postgres'
+DATABASE_USER_PWD = 'postgres1234'
+DATABASE_HOST = 'localhost'
+DATABASE_PORT = '5432'
 
 POSTGRESQL_DB = 'postgres'
 BUDGETING_DB = 'budgeting'
@@ -20,7 +20,7 @@ BUDGETING_DB = 'budgeting'
 connection = None
 cursor = None
 
-def Initialize_Database():
+def initialize_database():
     try:
         connection = psycopg2.connect(
             user=DATABASE_USER,
@@ -36,18 +36,23 @@ def Initialize_Database():
         exists = cursor.fetchone()
 
         if not exists:
-            cursor.execute(sql.SQL('CREATE DATABASE {};').format(sql.Identifier(BUDGETING_DB)))
-            print(f"Created new database: {BUDGETING_DB}")
-
+            cursor.execute(
+                sql.SQL(
+                    'CREATE DATABASE {};').format(sql.Identifier(BUDGETING_DB)
+                )
+            )
+            print(f'Created new database: {BUDGETING_DB}')
         connection.commit()
-        print(f"Initialized database object")
+        print(f'Initialized database')
     except Exception as error:
-        print(f"An error occurred with initializing the database: {error}")
+        print(f'An error occurred with initializing the database: {error}')
     finally:
-        if cursor is not None: cursor.close()
-        if connection is not None: connection.close()
+        if cursor is not None: 
+            cursor.close()
+        if connection is not None: 
+            connection.close()
 
-def Initialize_Tables():
+def populate_database():
     try:
         connection = psycopg2.connect(
             user=DATABASE_USER,
@@ -58,17 +63,19 @@ def Initialize_Tables():
         )
         connection.autocommit = True
         cursor = connection.cursor()
-
-        schema_path = os.path.join(os.path.dirname(__file__), '../budgeting_schema.sql')
+        schema_path = os.path.join(
+            os.path.dirname(__file__), 
+            '../database/schema.sql'
+        )
 
         with open(schema_path, 'r') as f:
             cursor.execute(f.read())
-            print(f"Created {BUDGETING_DB} tables")
-
+            print(f'Created {BUDGETING_DB} tables')
         connection.commit()
-        print(f"Initialized database tables")
     except Exception as error:
-        print(f"An error occurred with initializing database tables: {error}")
+        print(f'An error occurred with initializing database tables: {error}')
     finally:
-        if cursor is not None: cursor.close()
-        if connection is not None: connection.close()
+        if cursor is not None: 
+            cursor.close()
+        if connection is not None: 
+            connection.close()
