@@ -6,8 +6,8 @@ Authors: Yedani Mendoza Gurrola, Artem Marsh, Jose Gomez Betancourt, Alexander G
 '''
 
 from app import app, db
-from app.models import User, Expense
-from app.forms import SignUpForm, LoginForm, DeleteExpenseForm
+from app.models import User, Expense, CategoryType, PaymentType
+from app.forms import SignUpForm, LoginForm, DeleteExpenseForm, SearchExpenseForm, ListExpenseForm
 from flask import render_template, request, redirect, url_for, flash, session
 from functools import wraps
 import bcrypt
@@ -71,6 +71,51 @@ def logout():
     session.pop('user_name', None)
     flash('Logged out successfully.', 'successful')
     return redirect(url_for('login'))
+
+@app.route('/search', methods=['GET', 'POST'])
+def search_expenses():
+    form = SearchExpenseForm()
+    expenses = []
+
+    if request.method == 'POST' and form.validate_on_submit():
+        query = db.session.query(Expense)
+        
+        if form.date.data:
+            query = query.filter(Expense.date == form.date.data)
+
+        if form.category.data:
+            query = query.filter(Expense.category_code == int(form.category.data))
+        
+        if form.payment_type.data:
+            query = query.filter(Expense.payment_type_code == int(form.payment_type.data))
+        
+        if form.charge_type.data:
+            is_recurring = form.charge_type.data == 'recurring'
+            query = query.filter(Expense.is_recurring == is_recurring)
+
+        expenses = query.all()
+
+    return render_template('search.html', form=form, expenses=expenses)
+
+@app.route('/expenses', methods=['GET'])
+@login_required
+def list_expenses():
+    form = ListExpenseForm(request.args)
+    
+    if not form.validate():
+        # If form validation fails, default to first page with 10 items
+        page = 1
+        items_per_page = 10
+    else:
+        page = form.page.data
+        items_per_page = form.items_per_page.data
+
+    # Use Flask-SQLAlchemy's pagination
+    expenses = Expense.query.filter_by(user_id=session['user_id']) \
+        .order_by(Expense.date.desc()) \
+        .paginate(page=page, per_page=items_per_page, error_out=False)
+    
+    return render_template('list_expenses.html', expenses=expenses, form=form)
 
 @app.route('/delete_expense/<int:id>', methods=['GET', 'POST'])
 @login_required

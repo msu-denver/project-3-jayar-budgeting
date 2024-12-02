@@ -9,6 +9,8 @@ from flask_wtf import FlaskForm
 from wtforms import *
 from wtforms import StringField, TextAreaField, PasswordField, SubmitField, DateField, SelectField
 from wtforms.validators import DataRequired, Length, EqualTo, Optional, NumberRange
+from app import db
+from app.models import CategoryType, PaymentType
 
 class SignUpForm(FlaskForm):
     id = StringField('User ID', validators=[DataRequired(), Length(min=4, max=20)])
@@ -26,3 +28,30 @@ class DeleteExpenseForm(FlaskForm):
     expense_id = StringField('Expense ID', validators=[DataRequired()])
     confirm = BooleanField('I understand this action cannot be undone', validators=[DataRequired()])
     submit = SubmitField('Delete Expense')
+
+class SearchExpenseForm(FlaskForm):
+    date = DateField('Date', format='%Y-%m-%d', validators=[Optional()])
+    category = SelectField('Category', choices=[], validators=[Optional()])
+    payment_type = SelectField('Payment Method', choices=[], validators=[Optional()])
+    charge_type = SelectField(
+        'Charge Type',
+        choices=[('', 'Select'), ('recurring', 'Recurring'), ('one-time', 'One-Time')],
+        validators=[Optional()]
+    )
+    submit = SubmitField('Search')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Populate dropdown choices from database
+        self.category.choices = [('', 'Select a Category')] + [
+            (str(cat.code), cat.name) for cat in db.session.query(CategoryType).all()
+        ]
+        self.payment_type.choices = [('', 'Select a Payment Method')] + [
+            (str(pt.code), pt.name) for pt in db.session.query(PaymentType).all()
+        ]
+
+class ListExpenseForm(FlaskForm):
+    page = IntegerField('Page', default=1, validators=[Optional(), NumberRange(min=1, message="Page must be 1 or greater.")])
+    items_per_page = IntegerField('Items Per Page', default=10, validators=[Optional(), NumberRange(min=1, max=100, message="Items per page must be between 1 and 100.")])
+    submit = SubmitField('Go')

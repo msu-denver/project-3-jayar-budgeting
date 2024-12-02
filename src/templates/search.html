@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Search Expenses{% endblock %}
+{% block main %}
+    <h1>Search Expenses</h1>
+    <form method="post" action="{{ url_for('search_expenses') }}">
+        {{ form.hidden_tag() }}
+        <div>
+            <label for="date">Date:</label>
+            {{ form.date(class="form-control") }}
+        </div>
+        <div>
+            <label for="category">Category:</label>
+            {{ form.category(class="form-control") }}
+        </div>
+        <div>
+            <label for="payment_type">Payment Type:</label>
+            {{ form.payment_type(class="form-control") }}
+        </div>
+        <div>
+            <label for="charge_type">Charge Type:</label>
+            {{ form.charge_type(class="form-control") }}
+        </div>
+
+        <p>{{ form.submit(class="btn btn-primary") }}</p>
+    </form>
+{% endblock %}
