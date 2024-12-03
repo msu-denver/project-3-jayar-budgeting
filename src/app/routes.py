@@ -5,12 +5,15 @@ Description: Defines the web routes for the budgeting web app including URL mapp
 Authors: Yedani Mendoza Gurrola, Artem Marsh, Jose Gomez Betancourt, Alexander Gonzalez Ramirez, Rhodes Ferris
 '''
 
-from app import app, db
-from app.models import User, Expense, CategoryType, PaymentType
-from app.forms import SignUpForm, LoginForm, DeleteExpenseForm, SearchExpenseForm, ListExpenseForm
-from flask import render_template, request, redirect, url_for, flash, session
-from functools import wraps
 import bcrypt
+from functools import wraps
+from flask import render_template, request, redirect, url_for, flash, session
+from flask_login import login_user, current_user
+from app import app, db
+from app.models import User, Expense, CategoryType, PaymentType, Merchant, ReceiptImage
+from app.forms import SignUpForm, LoginForm, DeleteExpenseForm, SearchExpenseForm, ListExpenseForm, CreateExpenseForm
+from service.expense_service import ExpenseService
+
 
 # Login required decorator
 def login_required(f):
@@ -22,30 +25,39 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# Web app routes
 @app.route('/')
 @app.route('/index')
 @app.route('/index.html')
 def index(): 
     return render_template('index.html')
 
-@app.route('/users/signup', methods=['GET', 'POST'])
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignUpForm()
+    template_url = render_template('signup.html', form=form)
     if form.validate_on_submit():
-        if form.passwd.data == form.passwd_confirm.data:
-            hashed_passwd = bcrypt.hashpw(form.passwd.data.encode('utf-8'), bcrypt.gensalt())
-            new_user = User(id=form.id.data, name=form.name.data, passwd=hashed_passwd)
-            existing_user = User.query.filter_by(id=form.id.data).first()
-            if existing_user:
-                flash('User ID already in use.', 'error')
-                print('User ID not created due to existing ID')
-            else:
-                db.session.add(new_user)
-                db.session.commit()
-                flash('Account created successfully.', 'successful')
-                print(f'Account created: {form.id.data}')
-            return redirect(url_for('signup'))
-    return render_template('signup.html', form=form)
+        # Handle the new user data
+        new_user_passwd = bcrypt.hashpw(
+            form.passwd.data.encode('utf-8'), 
+            bcrypt.gensalt()
+        )
+        new_user = User(
+            id=form.id.data, 
+            name=form.name.data, 
+            passwd=new_user_passwd
+        )
+        # Ensure unique user ID before committing
+        existing_user = User.query.filter_by(id=form.id.data).first()
+        if not existing_user:
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Account created successfully.', 'successful')
+            template_url = redirect(url_for('index'))
+        else:
+            flash('User ID already in use.', 'error')
+            template_url = redirect(url_for('signup'))
+    return template_url
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -56,8 +68,8 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(id=form.id.data).first()
         if user and bcrypt.checkpw(form.passwd.data.encode('utf-8'), user.passwd):
+            login_user(user)
             session['user_id'] = user.id
-            session['user_name'] = user.name
             flash('Logged in successfully.', 'successful')
             return redirect(url_for('index'))
         else:
@@ -71,6 +83,32 @@ def logout():
     session.pop('user_name', None)
     flash('Logged out successfully.', 'successful')
     return redirect(url_for('login'))
+
+@app.route('/create-expense', methods=['GET', 'POST'])
+def create_expense():
+    form = CreateExpenseForm()
+    service = ExpenseService(db, current_user)
+    if form.validate_on_submit():
+        try:
+            # Handle Merchant Data
+            merchant_name = form.merchant.data.strip().upper()
+            merchant = service.get_or_create_merchant(merchant_name)
+
+            # Create Expense Record
+            category = CategoryType.query.get(form.category.data)
+            payment_type = PaymentType.query.get(form.payment_type.data)
+            new_expense = service.create_expense(form, merchant_name, category, payment_type, current_user)
+            
+            # Handle Receipt Image
+            receipt = form.receipt_image.data
+            if receipt:
+                service.create_image(receipt, new_expense)
+            flash('Expense created successfully!', 'successful')
+            return redirect(url_for('create_expense'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error creating expense: {str(e)}', 'error')
+    return render_template('create_expense.html', form=form)
 
 @app.route('/search', methods=['GET', 'POST'])
 def search_expenses():

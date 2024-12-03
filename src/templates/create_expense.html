@@ -1,0 +1,44 @@
+{% extends 'base.html' %} 
+{% block title %}New Expense - Expense Budgeting{% endblock %} 
+{% block main%} 
+
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages %}
+<ul style="padding: 0; margin: 0">
+  {% for category, message in messages %}
+  <li class="{{ category }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% endwith %}
+
+<div class="container mt-4">
+    <h1>Create Expense</h1>
+    <form action="{{ url_for('create_expense') }}" method="POST" enctype="multipart/form-data" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.date.label(class="form-label") }}
+            {{ form.date(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.merchant.label(class="form-label") }}
+            {{ form.merchant(class="form-control", style="text-transform: uppercase;") }}
+        </div>
+        <div class="form-group">
+            {{ form.category.label(class="form-label") }}
+            {{ form.category(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.amount.label(class="form-label") }}
+            {{ form.amount(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.payment_type.label(class="form-label") }}
+            {{ form.payment_type(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.receipt_image.label(class="form-label") }}
+            {{ form.receipt_image(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Create Expense</button>
+    </form>
+</div>
+{% endblock %}
