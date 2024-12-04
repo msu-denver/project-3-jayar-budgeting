@@ -1,9 +1,9 @@
-'''
+"""
 CS3250 - Software Development Methods and Tools - Final Project
 Module Name: models.py
 Description: Defines the models used for the budgeting web app that interacts with the PostgreSQL database
 Authors: Yedani Mendoza Gurrola, Artem Marsh, Jose Gomez Betancourt, Alexander Gonzalez Ramirez, Rhodes Ferris
-'''
+"""
 
 from flask_login import UserMixin
 from app import db
@@ -71,7 +71,8 @@ class Expense(db.Model):
     payment_type_code = db.Column(db.Integer, db.ForeignKey('payment_types.code'))
     receipt_image = db.relationship('ReceiptImage', back_populates='expense', uselist=False, cascade='all, delete-orphan')
     user = db.relationship('User', back_populates='expenses')
+    payment_type_rel = db.relationship('PaymentType', foreign_keys=[payment_type_code])
+    category_type_rel = db.relationship('CategoryType', foreign_keys=[category_code])
 
     def __str__(self):
         return f'{self.id},{self.user_id},{self.date},{self.merchant},{self.category},{self.category_code},{self.amount},{self.payment_type},{self.payment_type_code},{self.receipt_image},{self.user}'
-    

@@ -1,9 +1,9 @@
-'''
+"""
 CS3250 - Software Development Methods and Tools - Final Project
 Module Name: routes.py
 Description: Defines the web routes for the budgeting web app including URL mappings and the associated view functions
 Authors: Yedani Mendoza Gurrola, Artem Marsh, Jose Gomez Betancourt, Alexander Gonzalez Ramirez, Rhodes Ferris
-'''
+"""
 
 import bcrypt
 from functools import wraps
@@ -13,6 +13,7 @@ from app import app, db
 from app.models import User, Expense, CategoryType, PaymentType, Merchant, ReceiptImage
 from app.forms import SignUpForm, LoginForm, DeleteExpenseForm, SearchExpenseForm, ListExpenseForm, CreateExpenseForm
 from service.expense_service import ExpenseService
+from sqlalchemy import func
 
 
 # Login required decorator
@@ -25,12 +26,14 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
 # Web app routes
 @app.route('/')
 @app.route('/index')
 @app.route('/index.html')
 def index(): 
     return render_template('index.html')
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -59,6 +62,7 @@ def signup():
             template_url = redirect(url_for('signup'))
     return template_url
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if 'user_id' in session:
@@ -77,12 +81,14 @@ def login():
     
     return render_template('login.html', form=form)
 
+
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     session.pop('user_name', None)
     flash('Logged out successfully.', 'successful')
     return redirect(url_for('login'))
+
 
 @app.route('/create-expense', methods=['GET', 'POST'])
 def create_expense():
@@ -110,6 +116,7 @@ def create_expense():
             flash(f'Error creating expense: {str(e)}', 'error')
     return render_template('create_expense.html', form=form)
 
+
 @app.route('/search', methods=['GET', 'POST'])
 def search_expenses():
     form = SearchExpenseForm()
@@ -135,6 +142,7 @@ def search_expenses():
 
     return render_template('search.html', form=form, expenses=expenses)
 
+
 @app.route('/expenses', methods=['GET'])
 @login_required
 def list_expenses():
@@ -154,6 +162,7 @@ def list_expenses():
         .paginate(page=page, per_page=items_per_page, error_out=False)
     
     return render_template('list_expenses.html', expenses=expenses, form=form)
+
 
 @app.route('/delete_expense/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -182,13 +191,41 @@ def delete_expense(id):
     
     return render_template('delete.html', form=form, expense=expense)
 
+
+@app.route('/expenses/statement', methods=['GET'])
+@login_required
+def expenses_statement():
+    # Get query parameters for pagination
+    page = request.args.get('page', 1, type=int)
+    items_per_page = request.args.get('items_per_page', 10, type=int)
+    
+    # Fetch user's expenses
+    expenses = Expense.query.filter_by(user_id=current_user.id)\
+        .order_by(Expense.date.desc())\
+        .paginate(page=page, per_page=items_per_page, error_out=False)
+    
+    # Calculate summary data
+    total_spent = db.session.query(func.sum(Expense.amount))\
+        .filter(Expense.user_id == current_user.id).scalar() or 0
+    total_by_payment = db.session.query(Expense.payment_type, func.sum(Expense.amount))\
+        .filter(Expense.user_id == current_user.id)\
+        .group_by(Expense.payment_type).all()
+    
+    return render_template('statement.html', 
+                           expenses=expenses, 
+                           total_spent=total_spent, 
+                           total_by_payment=total_by_payment,
+                           page=page,
+                           items_per_page=items_per_page)
+
+
 # Error handlers
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('404.html'), 404
 
+
 @app.errorhandler(500)
 def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
-    return render_template('signup.html', form=form)
