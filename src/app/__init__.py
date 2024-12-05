@@ -14,7 +14,10 @@ app = Flask('Budgeting Web App')
 app.secret_key = 'you will never know'
 
 # database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI','postgresql://postgres:postgres1234@localhost:5432/budgeting')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+    'DATABASE_URL',
+    'postgresql://postgres:postgres@db:5432/budgeting_db'
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -23,11 +26,9 @@ from app.db_init import initialize_database, populate_database
 from app.models import User
 
 # database initialization
-initialize_database()
-populate_database()
-
-# models initialization
-with app.app_context(): 
+with app.app_context():
+    initialize_database()
+    populate_database()
     db.create_all()
 
 # login manager
