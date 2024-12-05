@@ -42,14 +42,6 @@ label {
   font-weight: bold;
 }
 
-.odd_row {
-  background-color: white;
-}
-
-.even_row {
-  background-color: lightgray;
-}
-
 .button {
   background-color: darkblue;
   color: white;
@@ -202,4 +194,75 @@ textarea.form-control {
 
 .cancel-button:hover {
   background-color: #5a6268;
+}
+
+/* top banner and navigation */
+.default_banner {
+  font-size: 1.5rem;
+  text-align: left;
+  height: 40px;
+  padding: 10px;
+  padding-left: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+}
+
+.default_banner a {
+  color: darkblue;
+  text-decoration: none;
+  padding: 15px;
+  display: block;
+  text-align: center;
+}
+
+.home-bar ul {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+}
+
+.home-bar a {
+  font-size: 0.9rem;
+  color: darkblue;
+  text-decoration: none;
+  padding: 15px;
+  display: block;
+  text-align: center;
+}
+
+.home-bar li {
+  float: right;
+}
+
+.home-bar div {
+  float: left;
+}
+
+/* home option selections */
+.option-container div {
+  max-width: 90%;
+  margin: 2rem auto;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.option-container h2 {
+  margin-top: 0;
+}
+
+.option-container a {
+  width: 120px;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+  background-color: #000080;
+  color: white;
 }

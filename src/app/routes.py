@@ -31,14 +31,17 @@ def login_required(f):
 @app.route('/')
 @app.route('/index')
 @app.route('/index.html')
-def index(): 
+def index():
     return render_template('index.html')
 
+@app.route('/home', methods=['GET', 'POST'])
+@login_required
+def home():
+    return render_template('home.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignUpForm()
-    template_url = render_template('signup.html', form=form)
     if form.validate_on_submit():
         # Handle the new user data
         new_user_passwd = bcrypt.hashpw(
@@ -56,17 +59,17 @@ def signup():
             db.session.add(new_user)
             db.session.commit()
             flash('Account created successfully.', 'successful')
-            template_url = redirect(url_for('index'))
+            return redirect(url_for('index'))
         else:
             flash('User ID already in use.', 'error')
-            template_url = redirect(url_for('signup'))
-    return template_url
+            return redirect(url_for('signup'))
+    return render_template('signup.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if 'user_id' in session:
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     
     form = LoginForm()
     if form.validate_on_submit():
@@ -75,9 +78,10 @@ def login():
             login_user(user)
             session['user_id'] = user.id
             flash('Logged in successfully.', 'successful')
-            return redirect(url_for('index'))
+            return redirect(url_for('home'))
         else:
             flash('Invalid username or password.', 'error')
+            return redirect(url_for('login'))
     
     return render_template('login.html', form=form)
 
@@ -91,6 +95,7 @@ def logout():
 
 
 @app.route('/create-expense', methods=['GET', 'POST'])
+@login_required
 def create_expense():
     form = CreateExpenseForm()
     service = ExpenseService(db, current_user)
@@ -110,7 +115,7 @@ def create_expense():
             if receipt:
                 service.create_image(receipt, new_expense)
             flash('Expense created successfully!', 'successful')
-            return redirect(url_for('create_expense'))
+            return redirect(url_for('home'))
         except Exception as e:
             db.session.rollback()
             flash(f'Error creating expense: {str(e)}', 'error')
@@ -164,19 +169,20 @@ def list_expenses():
     return render_template('list_expenses.html', expenses=expenses, form=form)
 
 
-@app.route('/delete_expense/<int:id>', methods=['GET', 'POST'])
+@app.route('/delete_expense', methods=['GET', 'POST'])
 @login_required
-def delete_expense(id):
+def delete_expense():
     form = DeleteExpenseForm()
-    expense = Expense.query.get_or_404(id)
-    
-    # Check if the expense belongs to the logged-in user
-    if expense.user_id != session['user_id']:
-        flash('You do not have permission to delete this expense.', 'error')
-        return redirect(url_for('index'))
-    
+    expense = None
     if form.validate_on_submit():
         if form.confirm.data:
+            expense = Expense.query.get_or_404(form.data.expense_id)
+    
+            # Check if the expense belongs to the logged-in user
+            if expense.user_id != session['user_id']:
+                flash('You do not have permission to delete this expense.', 'error')
+                return redirect(url_for('index'))
+            
             try:
                 db.session.delete(expense)
                 db.session.commit()
@@ -211,12 +217,14 @@ def expenses_statement():
         .filter(Expense.user_id == current_user.id)\
         .group_by(Expense.payment_type).all()
     
-    return render_template('statement.html', 
-                           expenses=expenses, 
-                           total_spent=total_spent, 
-                           total_by_payment=total_by_payment,
-                           page=page,
-                           items_per_page=items_per_page)
+    return render_template(
+        'statement.html', 
+        expenses=expenses, 
+        total_spent=total_spent, 
+        total_by_payment=total_by_payment,
+        page=page,
+        items_per_page=items_per_page
+    )
 
 
 # Error handlers

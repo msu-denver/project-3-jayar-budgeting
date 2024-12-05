@@ -7,6 +7,7 @@ Authors: Yedani Mendoza Gurrola, Artem Marsh, Jose Gomez Betancourt, Alexander G
 
 from datetime import date
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, DateField, BooleanField, SelectField, DecimalField, FileField, IntegerField
 from wtforms.validators import DataRequired, Length, EqualTo, Optional, NumberRange
 from app import db
@@ -16,27 +17,28 @@ class SignUpForm(FlaskForm):
     id = StringField(
         'User ID', 
         validators=[
-            DataRequired(), 
+            DataRequired(message='You must enter a user ID.'), 
             Length(min=4, max=20)
         ]
     )
     name = StringField(
         'Name', 
         validators=[
-            DataRequired(), Length(max=50)
+            DataRequired(message='You must enter a name.'), 
+            Length(max=50)
         ]
     )
     passwd = PasswordField(
         'Password', 
         validators=[
-            DataRequired(), 
+            DataRequired(message='You must enter a password.'), 
             Length(min=6, message='Password must be at least 6 characters')
         ]
     )
     passwd_confirm = PasswordField(
         'Confirm Password', 
         validators=[
-            DataRequired(), 
+            DataRequired(message='You must confirm your password.'), 
             EqualTo('passwd', message='Passwords must match')
         ]
     )
@@ -59,33 +61,37 @@ class LoginForm(FlaskForm):
 class CreateExpenseForm(FlaskForm):
     date = DateField(
         'Transaction Date',
-        validators=[DataRequired()], 
+        validators=[DataRequired(message='You must enter a date.')], 
         render_kw={"max": date.today().isoformat()}
     )
     merchant = StringField(
         'Merchant Name', 
-        validators=[DataRequired()]
+        validators=[DataRequired(message='You must enter a merchant.')]
     )
     category = SelectField(
         'Category', 
         choices=[], 
-        validators=[DataRequired()]
+        validators=[DataRequired(message='You must enter a category.')]
     )
     amount = DecimalField(
         'Amount Paid', 
         places=2, 
         rounding=None, 
         validators=[
-            DataRequired(), 
+            DataRequired(message='You must enter an amount.'), 
             NumberRange(min=0)
         ]
     )
     payment_type = SelectField(
         'Payment Method', 
         choices=[], 
-        validators=[DataRequired()]                
+        validators=[DataRequired(message='You must enter a payment type.')]                
     )
-    receipt_image = FileField('Upload Receipt (optional)')
+    receipt_image = FileField(
+        'Upload Receipt (optional)',
+        validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Please upload a jpg, jpeg, or png image.')]
+    )
+    submit = SubmitField('Create New Expense')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

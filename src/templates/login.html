@@ -1,41 +1,41 @@
 {% extends 'base.html' %}
 {% block title %}Login - Expense Budgeting{% endblock %}
 
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages %}
+<ul style="padding: 0; margin: 0">
+  {% for category, message in messages %}
+  <li class="{{ category }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% endwith %}
+
 {% block main %}
     <div class="form-container">
         <h1>Login</h1>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="flash-message">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        
         <form action="{{ url_for('login') }}" method="POST" novalidate>
             {{ form.hidden_tag() }}
             <div class="form-group">
                 {{ form.id.label }}
-                {{ form.id(class="form-input") }}
+                {{ form.id(class="form-control") }}
                 {% if form.id.errors %}
                     {% for error in form.id.errors %}
-                        <span class="error">{{ error }}</span>
+                        <span class="form-error">{{ error }}</span>
                     {% endfor %}
                 {% endif %}
             </div>
             
             <div class="form-group">
                 {{ form.passwd.label }}
-                {{ form.passwd(class="form-input") }}
+                {{ form.passwd(class="form-control") }}
                 {% if form.passwd.errors %}
                     {% for error in form.passwd.errors %}
-                        <span class="error">{{ error }}</span>
+                        <span class="form-error">{{ error }}</span>
                     {% endfor %}
                 {% endif %}
             </div>
             
             <div class="form-group">
-                {{ form.submit(class="submit-button") }}
+                <button type="submit" class="btn btn-primary">Login</button>
             </div>
         </form>
         <div class="signup-link">

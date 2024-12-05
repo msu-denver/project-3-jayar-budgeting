@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block main %}
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages %}
+<ul style="padding: 0; margin: 0">
+  {% for category, message in messages %}
+  <li class="{{ category }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% endwith %}
+
+<header class="default_banner">
+  <div>
+    <a href="{{ url_for('home') }}"><b>Expense Budgeting</b></a>
+  </div>
+  <nav class="home-bar">
+    <ul>
+      <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+    </ul>
+  </nav>
+</header>
+<main class="option-container">
+  <div>
+    <h1>Welcome, {{ current_user.name }}!</h1>
+    <div>
+      <h2>Search Expenses</h2>
+      <p>
+        Easily locate specific expenses from your history using filters to quickly access the details you need without scrolling through all your entries.
+      </p>
+      <a href="{{ url_for('search_expenses') }}">Search</a>
+    </div>
+    <hr>
+    <div>
+      <h2>Add Expense</h2>
+      <p>
+        Add a new expense effortlessly by providing details such as amount, category, and date to help you stay organized and track your spending accurately.
+      </p>
+      <a href="{{ url_for('create_expense') }}">Add New</a>
+    </div>
+    <div>
+      <h2>Remove Expense</h2>
+      <p>
+        Need to remove an expense? Manage your tracked expenses by removing entries that are no longer relevant or were added by mistake. Keep your records clean and up-to-date with this feature.
+      </p>
+      <a href="{{ url_for('delete_expense') }}">Remove</a>
+    </div>
+    <hr>
+    <div>
+      <h2>Expense Trends</h2>
+      <p>
+        Understand your spending patterns through visual data that highlights trends in your expenses, making it easy to identify areas where you can save.
+      </p>
+      <a href="{{ url_for('create_expense') }}">View Trends</a>
+    </div>
+    <div>
+      <h2>Expense Statement</h2>
+      <p>
+        View your statement and get a comprehensive overview of all your expenses in one place that provides a clear breakdown of your spending over a selected period, helping you analyze and manage your finances effectively.
+      </p>
+      <a href="{{ url_for('expenses_statement') }}">View Statement</a>
+    </div>
+  </div>
+</main>
+{% endblock %}
