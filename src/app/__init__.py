@@ -13,11 +13,18 @@ from flask_login import LoginManager
 app = Flask('Budgeting Web App')
 app.secret_key = 'you will never know'
 
+# Determine if we're running in Docker or locally
+IN_DOCKER = os.environ.get('RUNNING_IN_DOCKER', False)
+
 # database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
-    'DATABASE_URL',
-    'postgresql://postgres:postgres@db:5432/budgeting_db'
-)
+if IN_DOCKER:
+    # Docker environment
+    db_uri = 'postgresql://postgres:postgres@db:5432/budgeting_db'
+else:
+    # Local environment
+    db_uri = 'postgresql://postgres:postgres1234@localhost:5432/budgeting'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', db_uri)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 

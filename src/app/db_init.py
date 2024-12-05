@@ -10,14 +10,25 @@ import psycopg2
 from psycopg2 import sql
 import time
 
-# Updated database configuration to match Docker environment
-DATABASE_USER = 'postgres'
-DATABASE_USER_PWD = 'postgres'
-DATABASE_HOST = 'db'  # This should match the service name in docker-compose
-DATABASE_PORT = '5432'
+# Determine if we're running in Docker or locally
+IN_DOCKER = os.environ.get('RUNNING_IN_DOCKER', False)
+
+if IN_DOCKER:
+    # Docker environment
+    DATABASE_USER = 'postgres'
+    DATABASE_USER_PWD = 'postgres'
+    DATABASE_HOST = 'db'
+    DATABASE_PORT = '5432'
+    BUDGETING_DB = 'budgeting_db'
+else:
+    # Local environment
+    DATABASE_USER = 'postgres'
+    DATABASE_USER_PWD = 'postgres1234'
+    DATABASE_HOST = 'localhost'
+    DATABASE_PORT = '5432'
+    BUDGETING_DB = 'budgeting'
 
 POSTGRESQL_DB = 'postgres'
-BUDGETING_DB = 'budgeting_db'  # Updated to match docker-compose configuration
 
 def wait_for_db(max_retries=5, delay_seconds=2):
     """Wait for database to become available"""
