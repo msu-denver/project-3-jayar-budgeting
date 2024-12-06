@@ -20,7 +20,32 @@
             <label for="charge_type">Charge Type:</label>
             {{ form.charge_type(class="form-control") }}
         </div>
-
         <p>{{ form.submit(class="btn btn-primary") }}</p>
     </form>
+
+    {% if no_results %}
+        <p>No expenses match your search criteria.</p>
+    {% elif expenses %}
+        <h2>Search Results</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Merchant</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                    <tr>
+                        <td>{{ expense.date }}</td>
+                        <td>{{ expense.category.description }}</td>
+                        <td>{{ expense.amount }}</td>
+                        <td>{{ expense.merchant.name }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock %}

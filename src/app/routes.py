@@ -133,7 +133,7 @@ def search_expenses():
     expenses = []
 
     if request.method == 'POST' and form.validate_on_submit():
-        query = db.session.query(Expense)
+        query = db.session.query(Expense).join(Merchant)
         
         if form.date.data:
             query = query.filter(Expense.date == form.date.data)
@@ -146,11 +146,14 @@ def search_expenses():
         
         if form.charge_type.data:
             is_recurring = form.charge_type.data == 'recurring'
-            query = query.filter(Expense.is_recurring == is_recurring)
+            query = query.filter(Merchant.reoccuring == is_recurring)
 
         expenses = query.all()
 
-    return render_template('search.html', form=form, expenses=expenses)
+    # Pass a flag to indicate no results found
+    no_results = len(expenses) == 0 and request.method == 'POST'
+
+    return render_template('search.html', form=form, expenses=expenses, no_results=no_results)
 
 
 @app.route('/expenses', methods=['GET'])

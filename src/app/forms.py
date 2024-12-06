@@ -128,13 +128,13 @@ class SearchExpenseForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        # Populate dropdown choices from database
+    
+    # Populate dropdown choices from database
         self.category.choices = [('', 'Select a Category')] + [
-            (str(cat.code), cat.name) for cat in db.session.query(CategoryType).all()
+            (str(cat.code), cat.description) for cat in db.session.query(CategoryType).all()
         ]
         self.payment_type.choices = [('', 'Select a Payment Method')] + [
-            (str(pt.code), pt.name) for pt in db.session.query(PaymentType).all()
+            (str(pt.code), pt.description) for pt in db.session.query(PaymentType).all()
         ]
 
 class ListExpenseForm(FlaskForm):
