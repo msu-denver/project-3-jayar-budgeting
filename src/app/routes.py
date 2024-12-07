@@ -155,6 +155,7 @@ def create_expense():
 
 
 @app.route('/search', methods=['GET', 'POST'])
+@login_required
 def search_expenses():
     form = SearchExpenseForm()
     # Collect search params pass to the list route
