@@ -20,12 +20,12 @@ hr {
 
 table, th, td {
   border: 1px solid;
-  padding: 5px
+  padding: 5px;
 }
 
 th {
   background-color: darkblue;
-  color: white
+  color: white;
 }
 
 input[type=submit] {
@@ -267,17 +267,35 @@ textarea.form-control {
   color: white;
 }
 
-/* search results table */
-.search-results {
-  border: 1px solid #ddd;
-  border-collapse: collapse;
-  width: 70%;
-  height: 200px;
+.card {
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
 }
 
-.search-results td {
-  border: 1px solid #ddd;
-  padding: 5px;
-  text-align: center;
-  max-width: 40px;
+.card-header {
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: #000080;
+  color: white;
+  padding: 10px;
+}
+
+.card-body {
+  padding: 15px;
+}
+
+.table {
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table th {
+  background-color: #343a40;
+  color: #ffffff;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1;
 }
