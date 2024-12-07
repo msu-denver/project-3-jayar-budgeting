@@ -6,6 +6,7 @@ Authors: Yedani Mendoza Gurrola, Artem Marsh, Jose Gomez Betancourt, Alexander G
 """
 
 from flask_login import UserMixin
+
 from app import db
 
 class User(db.Model, UserMixin):
@@ -63,7 +64,7 @@ class Expense(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
     date = db.Column(db.Date, nullable=False)
-    merchant = db.Column(db.Integer, db.ForeignKey('merchants.id'))
+    merchant = db.Column(db.String, db.ForeignKey('merchants.id'))
     category = db.Column(db.String, nullable=False)
     category_code = db.Column(db.Integer, db.ForeignKey('category_types.code'))
     amount = db.Column(db.Numeric(10, 2), nullable=False)
@@ -73,6 +74,8 @@ class Expense(db.Model):
     user = db.relationship('User', back_populates='expenses')
     payment_type_rel = db.relationship('PaymentType', foreign_keys=[payment_type_code])
     category_type_rel = db.relationship('CategoryType', foreign_keys=[category_code])
+    merchant_rel = db.relationship('Merchant', backref='expenses', foreign_keys=[merchant])
 
     def __str__(self):
         return f'{self.id},{self.user_id},{self.date},{self.merchant},{self.category},{self.category_code},{self.amount},{self.payment_type},{self.payment_type_code},{self.receipt_image},{self.user}'
+    

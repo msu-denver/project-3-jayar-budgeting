@@ -6,6 +6,7 @@ Authors: Yedani Mendoza Gurrola, Artem Marsh, Jose Gomez Betancourt, Alexander G
 '''
 
 import os
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager

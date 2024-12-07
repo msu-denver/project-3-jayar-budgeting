@@ -6,9 +6,10 @@ Authors: Yedani Mendoza Gurrola, Artem Marsh, Jose Gomez Betancourt, Alexander G
 '''
 
 import os
+import time
+
 import psycopg2
 from psycopg2 import sql
-import time
 
 # Determine if we're running in Docker or locally
 IN_DOCKER = os.environ.get('RUNNING_IN_DOCKER', False)

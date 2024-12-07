@@ -1,17 +1,15 @@
 {% extends "base.html" %}
 {% block title %}Delete Expense - Expense Budgeting{% endblock %}
-
 {% block main %}
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages %}
+<ul style="padding: 0; margin: 0">
+  {% for category, message in messages %}
+  <li class="{{ category }}">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% endwith %}
     <div class="form-container">
         <h1>Delete Expense</h1>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="flash-message">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        
         <form method="POST" action="{{ url_for('delete_expense', id=form.expense_id.data) }}">
             {{ form.hidden_tag() }}
             <div class="form-group">

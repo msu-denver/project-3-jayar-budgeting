@@ -1,0 +1,11 @@
+{% extends 'base.html' %} 
+{% block main%} 
+    <h1>Receipt for Expense #{{ expense.id }}</h1>
+    <div style="text-align: center;"></div>
+      {% if receipt_image %}
+        <img src="{{ receipt_image }}" alt="Receipt Image" style="display: block; margin: 0 auto;" />
+      {% else %}
+          <p>No receipt image available for this expense.</p>
+      {% endif %}
+    </div>
+{% endblock %}

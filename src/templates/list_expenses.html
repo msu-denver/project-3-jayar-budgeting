@@ -1,28 +1,38 @@
 {% extends "base.html" %}
-{% block content %}
-<div class="container">
+{% block main %}
+<div class="center-content">
     <h1>My Expenses</h1>
     
     {% if expenses.items %}
-        <table class="table">
+        <table class="search-results">
             <thead>
                 <tr>
+                    <th>Expense ID</th>
                     <th>Date</th>
+                    <th>Merchant</th>
                     <th>Amount</th>
                     <th>Category</th>
                     <th>Payment Type</th>
-                    <th>Recurring</th>
+                    <th>Receipt</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for expense in expenses.items %}
                 <tr>
+                    <td>{{ expense.id }}</td>
                     <td>{{ expense.date }}</td>
-                    <td>{{ expense.amount }}</td>
-                    <td>{{ expense.category.name }}</td>
-                    <td>{{ expense.payment_type.name }}</td>
-                    <td>{{ 'Yes' if expense.is_recurring else 'No' }}</td>
+                    <td>{{ expense.merchant }}</td>
+                    <td>${{ expense.amount }}</td>
+                    <td>{{ expense.category_type_rel.description if expense.category_type_rel else 'None' }}</td>
+                    <td>{{ expense.payment_type_rel.description if expense.payment_type_rel else 'None' }}</td>
+                    <td>
+                        {% if expense.receipt_image %}
+                        <a href="{{ url_for('get_receipt_image', id=expense.id) }}" class="btn btn-primary" target="_blank">View</a>
+                        {% else %}
+                        No Receipt
+                        {% endif %}
+                    </td>
                     <td>
                         <a href="{{ url_for('delete_expense', id=expense.id) }}" class="btn btn-danger btn-sm">Delete</a>
                     </td>
@@ -33,17 +43,12 @@
 
         <!-- Pagination controls -->
         <div class="pagination">
-            <form method="get" class="form-inline">
-                Page: {{ form.page(class="form-control mr-2") }}
-                Items per page: {{ form.items_per_page(class="form-control mr-2") }}
-                {{ form.submit(class="btn btn-primary") }}
-            </form>
-
             {% if expenses.has_prev %}
-                <a href="{{ url_for('list_expenses', page=expenses.prev_num, items_per_page=form.items_per_page.data) }}">Previous</a>
+                <a href="{{ url_for('list_expenses', page=expenses.prev_num, items_per_page=items_per_page) }}">Previous</a>
             {% endif %}
+            Page {{ expenses.page }} of {{ expenses.pages }}
             {% if expenses.has_next %}
-                <a href="{{ url_for('list_expenses', page=expenses.next_num, items_per_page=form.items_per_page.data) }}">Next</a>
+                <a href="{{ url_for('list_expenses', page=expenses.next_num, items_per_page=items_per_page) }}">Next</a>
             {% endif %}
         </div>
     {% else %}

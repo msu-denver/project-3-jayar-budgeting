@@ -4,48 +4,34 @@
     <h1>Search Expenses</h1>
     <form method="post" action="{{ url_for('search_expenses') }}">
         {{ form.hidden_tag() }}
-        <div>
+        <div class="form-group">
             <label for="date">Date:</label>
             {{ form.date(class="form-control") }}
+            {% if form.date.errors %} {% for error in form.date.errors %}
+            <span class="form-error">{{ error }}</span>
+            {% endfor %} {% endif %}
         </div>
-        <div>
+        <div class="form-group">
             <label for="category">Category:</label>
             {{ form.category(class="form-control") }}
+            {% if form.category.errors %} {% for error in form.category.errors %}
+            <span class="form-error">{{ error }}</span>
+            {% endfor %} {% endif %}
         </div>
-        <div>
+        <div class="form-group">
             <label for="payment_type">Payment Type:</label>
             {{ form.payment_type(class="form-control") }}
+            {% if form.payment_type.errors %} {% for error in form.payment_type.errors %}
+            <span class="form-error">{{ error }}</span>
+            {% endfor %} {% endif %}
         </div>
-        <div>
+        <div class="form-group">
             <label for="charge_type">Charge Type:</label>
             {{ form.charge_type(class="form-control") }}
+            {% if form.charge_type.errors %} {% for error in form.charge_type.errors %}
+            <span class="form-error">{{ error }}</span>
+            {% endfor %} {% endif %}
         </div>
         <p>{{ form.submit(class="btn btn-primary") }}</p>
     </form>
-
-    {% if no_results %}
-        <p>No expenses match your search criteria.</p>
-    {% elif expenses %}
-        <h2>Search Results</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Category</th>
-                    <th>Amount</th>
-                    <th>Merchant</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for expense in expenses %}
-                    <tr>
-                        <td>{{ expense.date }}</td>
-                        <td>{{ expense.category.description }}</td>
-                        <td>{{ expense.amount }}</td>
-                        <td>{{ expense.merchant.name }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
 {% endblock %}
