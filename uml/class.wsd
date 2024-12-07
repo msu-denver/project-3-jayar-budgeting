@@ -24,7 +24,6 @@ class ExpenseManager {
     + searchExpenses(criteria: Map<String, Object>): List<Expense>
     + listExpenses(expenses: List<Expense>): Table
     + generateStatement(): String
-    + visualizeExpenses(): Chart
 }
 
 class Database {

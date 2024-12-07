@@ -62,19 +62,13 @@ As a registered user, I want to view a summarized statement of all of my expense
 User story points: 25
 ```
 
-### US#8: Expenses Visualization 
-As a registered user, I want to generate a bar graph or heat map that summarizes the number of expenses by catergory so that I can easily visualize trends and patterns in my expenses over time.
-
-```
-User story points: 10
-```
 
 ## Development Process 
 |Sprint#|Goals|Start|End|Done|Observations|
 |---|---|---|---|---|---|
 |1|Complete file structure, UML diagrams and user stories 1, 2 and 4.|11/14/24|11/25/24|Completed UML diagrams and user stories 1, 2 and 4.|Everything was completed as expected.|
-|2|Complete user stories 3, 5 and 7.|11/26/24|12/02/24|Completed user stories 3, 5 and 6.|User story 7 wasn't completed but we did finish user story 6 which wasn't originally scheduled/|
-|3|Complete user stories 7 and 8.|12/03/24|12/07/24|Completed user stories 7 and 8.|We successfully completed all the user stories.|
+|2|Complete user stories 3, 5 and 7.|11/26/24|12/02/24|Completed user stories 3, 5 and 6.|User story 7 wasn't completed but we did finish user story 6 which wasn't originally scheduled.|
+|3|Complete user story 7.|12/03/24|12/07/24|Completed user story 7.|We successfully completed all the user stories.|
 
 ## Testing 
 |Component|Coverage Percentage|Type|

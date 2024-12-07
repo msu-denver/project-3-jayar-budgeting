@@ -5,11 +5,11 @@
 Participants: Yedani Mendoza Gurrola, Artem Marsh, Jose Gomez Betancourt, Alexander Gonzalez Ramirez, Rhodes Ferris
 
 12/3/2024 - 7:00pm
-Highlight: We finished user stories 7 and 8 and started working on testing. 
+Highlight: We finished user stories 7 and started working on testing. 
 
 Progress Updates:
 What have I done?
-Rhodes completed User Stories 7 (User Authentication) and 8 (Saving Goals).
+Rhodes completed User Story 7.
 Yedani and Jose went through the entire project to debug and ensure quality.
 Artem and Alex worked on finishing the Docker files and performed blackbox testing for the project.
 
