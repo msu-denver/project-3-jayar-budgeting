@@ -73,3 +73,4 @@ User story points: 25
 |---|---|
 |Expense Creation|Blackbox|
 |ExpenseService Class|Whitebox|
+![pics/coverage.png](pics/coverage.png)
