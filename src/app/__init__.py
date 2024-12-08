@@ -51,4 +51,10 @@ def load_user(id):
     except: 
         return None
 
+# Testing environment
+class TestConfig:
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres1234@localhost:5432/test_database'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    TESTING = True
+
 print("Flask app instance created:", app)
