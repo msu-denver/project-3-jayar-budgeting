@@ -47,7 +47,7 @@ class ReceiptImage(db.Model):
     expense = db.relationship('Expense', back_populates='receipt_image')
 
     def __str__(self):
-        return f'{self.id},{self.user_id},{self.expense_id},{self.image},{self.name},{self.mimetype},{self.expense}'
+        return f'{self.id},{self.user_id},{self.expense_id},{self.name},{self.mimetype}'
 
 class Merchant(db.Model):
     __tablename__ = 'merchants'
@@ -77,5 +77,5 @@ class Expense(db.Model):
     merchant_rel = db.relationship('Merchant', backref='expenses', foreign_keys=[merchant])
 
     def __str__(self):
-        return f'{self.id},{self.user_id},{self.date},{self.merchant},{self.category},{self.category_code},{self.amount},{self.payment_type},{self.payment_type_code},{self.receipt_image},{self.user}'
+        return f'{self.id},{self.user_id},{self.date},{self.merchant},{self.category},{self.category_code},{self.amount},{self.payment_type},{self.payment_type_code},{self.user}'
     

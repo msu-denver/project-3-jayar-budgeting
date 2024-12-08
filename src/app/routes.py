@@ -7,18 +7,16 @@ Authors: Yedani Mendoza Gurrola, Artem Marsh, Jose Gomez Betancourt, Alexander G
 
 import base64
 from functools import wraps
-from io import BytesIO
 
 import bcrypt
-import matplotlib.pyplot as plt
 from flask import render_template, request, redirect, url_for, flash, session, abort
 from flask_login import login_user, current_user, logout_user
 from sqlalchemy import func
 
 from app import app, db
-from app.models import User, Expense, CategoryType, PaymentType, Merchant, ReceiptImage
+from app.models import User, Expense, CategoryType, PaymentType, Merchant
 from app.forms import SignUpForm, LoginForm, DeleteExpenseForm, SearchExpenseForm, CreateExpenseForm
-from service.expense_service import ExpenseService
+from app.expense_service import ExpenseService
 
 
 # Login required decorator
@@ -263,42 +261,6 @@ def expenses_statement():
                            page=page,
                            items_per_page=items_per_page)
 
-
-@app.route('/visualize', methods=['GET'])
-@login_required
-def visualize_expenses():
-    # Fetch expenses grouped by category
-    query = db.session.query(
-        CategoryType.description,
-        func.count(Expense.id).label('count')
-    ).join(Expense, Expense.category_code == CategoryType.code) \
-     .filter(Expense.user_id == session['user_id']) \
-     .group_by(CategoryType.description).all()
-
-    # Prepare data for the graph
-    categories = [row[0] for row in query]
-    counts = [row[1] for row in query]
-
-    # Generate the bar graph
-    plt.figure(figsize=(10, 6))
-    plt.bar(categories, counts, color='blue')
-    plt.title('Expenses by Category')
-    plt.xlabel('Category')
-    plt.ylabel('Number of Expenses')
-    plt.xticks(rotation=45)
-
-    # Save the graph to a string buffer
-    buffer = BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    image_png = buffer.getvalue()
-    buffer.close()
-
-    # Encode the image in base64
-    graph = base64.b64encode(image_png).decode('utf-8')
-    plt.close()
-
-    return render_template('visualization.html', graph=graph)
 
 @app.route('/expense/<int:id>/receipt_image')
 def get_receipt_image(id):

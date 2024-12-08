@@ -37,8 +37,10 @@ class ExpenseService:
 
     def create_image(self, receipt, expense):
         """Creates a new receipt image associated with a specific expense."""
+        print(f"Creating ReceiptImage for user {self.user.id} and expense {expense.id}")
         receipt_filename = secure_filename(receipt.filename)
         receipt_data = receipt.read()
+        print("About to create ReceiptImage...")
         new_receipt = ReceiptImage(
             user_id=self.user.id,
             expense_id=expense.id,
@@ -49,10 +51,12 @@ class ExpenseService:
         )
         self.db.session.add(new_receipt)
         self.db.session.commit()
+        print(f"ReceiptImage created: {new_receipt}")
         return new_receipt
     
     def create_expense(self, form, merchant_name, category, payment_type, current_user):
         """Creates a new expense entry in the database."""
+        print("Creating Expense with:", current_user.id, form.data['date'], merchant_name, category.description, category.code)
         new_expense = Expense(
             user_id=current_user.id,
             date=form.data['date'],
