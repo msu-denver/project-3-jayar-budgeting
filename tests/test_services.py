@@ -63,12 +63,12 @@ class TestExpenseService(unittest.TestCase):
         db.session.add(merchant)
 
         # Category type entry
-        category_type = CategoryType(code=1, description="Food")  # Ensure this matches your table schema
+        category_type = CategoryType(code=1, description="Food")
         db.session.add(category_type)
         db.session.commit()
 
         # Payment type entry
-        payment_type = PaymentType(code=2, description="Credit Card")  # Ensure this matches your table schema
+        payment_type = PaymentType(code=2, description="Credit Card")
         db.session.add(payment_type)
         db.session.commit()
 
